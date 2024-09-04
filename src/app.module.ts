@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PerfilesModule } from './perfiles/perfiles.module';
 import { ConfigModule } from '@nestjs/config';
+import { SesionesModule } from './sesiones/sesiones.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConfigModule } from '@nestjs/config';
       ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: false } : null,
     }),
     PerfilesModule,
+    SesionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
