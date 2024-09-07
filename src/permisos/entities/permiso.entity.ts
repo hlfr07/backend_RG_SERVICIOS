@@ -4,13 +4,13 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class Permiso {
     @PrimaryGeneratedColumn()
     id: number;
-    @Column({default: true})
+    @Column({nullable: false})
     get: boolean;
-    @Column({default: true})
+    @Column({nullable: false})
     post: boolean;
-    @Column({default: true})
+    @Column({nullable: false})
     put: boolean;
-    @Column({default: true})
+    @Column({nullable: false})
     delete: boolean;
     @Column({default: true})
     estado: boolean;
