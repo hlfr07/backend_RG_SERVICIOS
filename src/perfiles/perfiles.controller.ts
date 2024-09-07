@@ -28,7 +28,7 @@ export class PerfilesController {
     return this.perfilesService.findOne(+id);
   }
 
-  @ApiBody({ type: CreatePerfileDto })
+  @ApiBody({ type: CreatePerfileDto }) //se usa el create para el body
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePerfileDto: UpdatePerfileDto) {
     return this.perfilesService.update(+id, updatePerfileDto);
