@@ -5,6 +5,10 @@ import { AppService } from './app.service';
 import { PerfilesModule } from './perfiles/perfiles.module';
 import { ConfigModule } from '@nestjs/config';
 import { SesionesModule } from './sesiones/sesiones.module';
+import { UsuariosModule } from './usuarios/usuarios.module';
+import { TablasModule } from './tablas/tablas.module';
+import { PrioridadesModule } from './prioridades/prioridades.module';
+import { PermisosModule } from './permisos/permisos.module';
 
 @Module({
   imports: [
@@ -22,6 +26,10 @@ import { SesionesModule } from './sesiones/sesiones.module';
     }),
     PerfilesModule,
     SesionesModule,
+    UsuariosModule,
+    TablasModule,
+    PrioridadesModule,
+    PermisosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
