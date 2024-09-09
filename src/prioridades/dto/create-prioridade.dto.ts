@@ -7,7 +7,7 @@ export class CreatePrioridadeDto {
     @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
     @IsNotEmpty({ message: 'La prioridad no puede estar vacía' })
     @IsString({ message: 'La prioridad debe ser un texto' })
-    @MaxLength(50, { message: 'La prioridad debe tener menos de 50 caracteres' })
+    @MaxLength(3, { message: 'La prioridad debe tener menos de 3 caracteres' })
     @MinLength(1, { message: 'La prioridad debe tener más de 1 caracteres' })
     prioridad: String;
 }
