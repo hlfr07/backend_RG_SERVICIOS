@@ -1,4 +1,3 @@
-import { Prioridade } from "src/prioridades/entities/prioridade.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: "perfiles"})
