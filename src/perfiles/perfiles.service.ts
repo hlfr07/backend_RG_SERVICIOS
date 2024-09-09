@@ -19,7 +19,10 @@ export class PerfilesService {
       throw new HttpException('El perfil ya existe', HttpStatus.CONFLICT);
     }
 
-    const nuevoPerfil = this.perfileRepository.create(createPerfileDto);
+    const nuevoPerfil = this.perfileRepository.create({
+      perfil: createPerfileDto.perfil,
+      prioridad: parseInt(createPerfileDto.prioridad)
+    });
 
     await this.perfileRepository.save(nuevoPerfil);
 
@@ -71,7 +74,10 @@ export class PerfilesService {
       }
     }
 
-    await this.perfileRepository.update(id, updatePerfileDto);
+    perfilEncontrado.perfil = updatePerfileDto.perfil;
+    perfilEncontrado.prioridad = parseInt(updatePerfileDto.prioridad);
+
+    await this.perfileRepository.update(id, perfilEncontrado);
 
     return { message: 'Perfil actualizado correctamente' };
   }
