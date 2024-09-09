@@ -5,7 +5,7 @@ export class Prioridade {
     @PrimaryGeneratedColumn()
     id: number;
     @Column({unique: true, nullable: false})
-    prioridad: string;
+    prioridad: number;
     @Column({default: true})
     estado: boolean;
 }
