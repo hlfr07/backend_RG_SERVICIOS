@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { SesionesModule } from './sesiones/sesiones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { TablasModule } from './tablas/tablas.module';
-import { PrioridadesModule } from './prioridades/prioridades.module';
 import { PermisosModule } from './permisos/permisos.module';
 
 @Module({
@@ -32,7 +31,6 @@ import { PermisosModule } from './permisos/permisos.module';
     SesionesModule,
     UsuariosModule,
     TablasModule,
-    PrioridadesModule,
     PermisosModule,
   ],
   controllers: [AppController],
