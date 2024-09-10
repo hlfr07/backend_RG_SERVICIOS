@@ -8,6 +8,7 @@ import { SesionesModule } from './sesiones/sesiones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { TablasModule } from './tablas/tablas.module';
 import { PermisosModule } from './permisos/permisos.module';
+import { ModulosModule } from './modulos/modulos.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PermisosModule } from './permisos/permisos.module';
     UsuariosModule,
     TablasModule,
     PermisosModule,
+    ModulosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
