@@ -25,15 +25,15 @@ async function bootstrap() {
 
   // swagger setup
   const config = new DocumentBuilder()
-  .setTitle('Backend Cholon')
-  .setDescription('Documentation API REST CHOLON')
+  .setTitle('Backend RG SERVICIOS GENERALES')
+  .setDescription('Documentation API RG SERVICIOS GENERALES')
   .setVersion('1.0')
   .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
   .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
-    customSiteTitle: 'Documentación API REST CHOLON',
+    customSiteTitle: 'Documentación API REST RG SERVICIOS GENERALES',
     customJs: [
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js',

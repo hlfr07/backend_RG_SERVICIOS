@@ -9,6 +9,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { TablasModule } from './tablas/tablas.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { ModulosModule } from './modulos/modulos.module';
+import { DetallePerfilesModule } from './detalle_perfiles/detalle_perfiles.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ModulosModule } from './modulos/modulos.module';
     TablasModule,
     PermisosModule,
     ModulosModule,
+    DetallePerfilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
