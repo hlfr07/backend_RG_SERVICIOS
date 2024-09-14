@@ -10,6 +10,8 @@ import { TablasModule } from './tablas/tablas.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { ModulosModule } from './modulos/modulos.module';
 import { DetallePerfilesModule } from './detalle_perfiles/detalle_perfiles.module';
+import { DetalleModulosTablasModule } from './detalle_modulos_tablas/detalle_modulos_tablas.module';
+import { DetalleModuloPerfilModule } from './detalle_modulo_perfil/detalle_modulo_perfil.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { DetallePerfilesModule } from './detalle_perfiles/detalle_perfiles.modul
     PermisosModule,
     ModulosModule,
     DetallePerfilesModule,
+    DetalleModulosTablasModule,
+    DetalleModuloPerfilModule,
   ],
   controllers: [AppController],
   providers: [AppService],
