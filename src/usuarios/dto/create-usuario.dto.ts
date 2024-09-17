@@ -7,8 +7,8 @@ export class CreateUsuarioDto {
     @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
     @IsNotEmpty({ message: 'El dni de usuario no puede estar vacío' })
     @IsString({ message: 'El dni de usuario debe ser un texto' })
-    @MaxLength(50, { message: 'El dni de usuario debe tener menos de 50 caracteres' })
-    @MinLength(3, { message: 'El dni de usuario debe tener más de 3 caracteres' })
+    @MaxLength(8, { message: 'El dni debe tener menos de 8 caracteres' })
+    @MinLength(8, { message: 'El dni debe tener más de 8 caracteres' })
     dni: string;
     
     @ApiProperty()
@@ -50,6 +50,4 @@ export class CreateUsuarioDto {
     @MaxLength(50, { message: 'La contraseña debe tener menos de 50 caracteres' })
     @MinLength(3, { message: 'La contraseña debe tener más de 3 caracteres' })
     password: string;
-    
-
 }

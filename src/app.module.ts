@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PerfilesModule } from './perfiles/perfiles.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SesionesModule } from './sesiones/sesiones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { TablasModule } from './tablas/tablas.module';
@@ -12,6 +12,10 @@ import { ModulosModule } from './modulos/modulos.module';
 import { DetallePerfilesModule } from './detalle_perfiles/detalle_perfiles.module';
 import { DetalleModulosTablasModule } from './detalle_modulos_tablas/detalle_modulos_tablas.module';
 import { DetalleModuloPerfilModule } from './detalle_modulo_perfil/detalle_modulo_perfil.module';
+import { MailService } from './mail/mail.service';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailModule } from './mail/mail.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -40,8 +44,10 @@ import { DetalleModuloPerfilModule } from './detalle_modulo_perfil/detalle_modul
     DetallePerfilesModule,
     DetalleModulosTablasModule,
     DetalleModuloPerfilModule,
+    MailModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailService],
 })
 export class AppModule {}

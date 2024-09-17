@@ -4,10 +4,15 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
+import * as bcryptjs from 'bcryptjs';
+import { UpdatePasswordUsuarioDto } from './dto/updatepassword-usuario.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { MailService } from 'src/mail/mail.service';
+import { UpdatePasswordCodeUsuarioDto } from './dto/updatepasswordcode-usuarios.dto';
 
 @Injectable()
 export class UsuariosService {
-  constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>) {}
+  constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>, private readonly mailService: MailService) { }
   async create(createUsuarioDto: CreateUsuarioDto) {
     const dniEncontrado = await this.usuarioRepository.findOneBy({
       dni: createUsuarioDto.dni
@@ -33,7 +38,15 @@ export class UsuariosService {
       return { message: 'El usuario ya existe' };
     }
 
-    const nuevoUsuario = this.usuarioRepository.create(createUsuarioDto);
+    //ahora pasamos a crear el usuario pero con el password encriptado
+    const nuevoUsuario = this.usuarioRepository.create({
+      dni: createUsuarioDto.dni,
+      nombre: createUsuarioDto.nombre,
+      apellido: createUsuarioDto.apellido,
+      email: createUsuarioDto.email,
+      usuario: createUsuarioDto.usuario,
+      password: await bcryptjs.hash(createUsuarioDto.password, 10)
+    });
 
     await this.usuarioRepository.save(nuevoUsuario);
 
@@ -60,6 +73,8 @@ export class UsuariosService {
     if (!usuario.estado) {
       return { message: 'Usuario no encontrado' };
     }
+
+    return usuario;
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
@@ -102,9 +117,139 @@ export class UsuariosService {
       }
     }
 
-    await this.usuarioRepository.update(id, updateUsuarioDto);
+    await this.usuarioRepository.update(id, {
+      dni: updateUsuarioDto.dni,
+      nombre: updateUsuarioDto.nombre,
+      apellido: updateUsuarioDto.apellido,
+      email: updateUsuarioDto.email,
+      usuario: updateUsuarioDto.usuario,
+      password: usuarioEncontrado.password
+    });
 
     return { message: 'Usuario actualizado correctamente' };
+  }
+
+  //creamos el servicio para actualizar la contraseña
+  async updatePassword(UpdatePasswordUsuarioDto: UpdatePasswordUsuarioDto) {
+    //buscamos el usuario por el email
+    const usuarioEncontrado = await this.usuarioRepository.findOneBy({
+      email: UpdatePasswordUsuarioDto.email,
+      estado: true
+    });
+
+    if (!usuarioEncontrado) {
+      return { message: 'Usuario no encontrado' };
+    }
+
+    if (!usuarioEncontrado.estado) {
+      return { message: 'Usuario no encontrado' };
+    }
+
+    //generamos un codigo de  verificacion de 6 digitos
+    const codigoVerificacion = Math.floor(100000 + Math.random() * 900000);
+
+    // Establecer la expiración del código (por ejemplo, 5 minutos)
+    const expiracion = new Date();
+    expiracion.setMinutes(expiracion.getMinutes() + 5);
+
+    //actualizamos el usuario con el codigo de verificacion y la expiracion
+    await this.usuarioRepository.update(usuarioEncontrado.id, {
+      resetCode: codigoVerificacion.toString(),
+      resetCodeExpiration: expiracion
+    });
+
+    //ahpra vamos a mejorar la fecha y hora para enviar por correo: de esto Sat Sep 14 2024 17:36:38 a esto 14/09/2024 17:36:38, en una const expiracionformat
+    const expiracionFormat = expiracion.getDate() + '/' + (expiracion.getMonth() + 1) + '/' + expiracion.getFullYear() + ' ' + expiracion.getHours() + ':' + expiracion.getMinutes() + ':' + expiracion.getSeconds();
+
+    //ahora enviamos el dni que corresponde al usaurio y un codigo de verificacion al correo del usuario usando mail service y en el conten haremos una vusta bonita
+    const emailContent = `
+                        <html>
+                        <head>
+                        <style>
+                        body {
+                          font-family: Arial, sans-serif;
+                          background-color: #f4f4f4;
+                          color: #333;
+                          padding: 20px;
+                        }
+                        .container {
+                          background-color: #fff;
+                          padding: 20px;
+                          border-radius: 5px;
+                          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }
+                        .header {
+                          background-color: #4CAF50;
+                          color: white;
+                          padding: 10px;
+                          text-align: center;
+                          border-radius: 5px 5px 0 0;
+                        }
+                        .content {
+                          margin-top: 20px;
+                        }
+                        .footer {
+                          margin-top: 20px;
+                          text-align: center;
+                          font-size: 12px;
+                          color: #777;
+                        }
+                        </style>
+                        </head>
+                        <body>
+                        <div class="container">
+                        <div class="header">
+                          <h1>Cambio de Contraseña</h1>
+                        </div>
+                        <div class="content">
+                          <p>Hola, <strong>${usuarioEncontrado.nombre} ${usuarioEncontrado.apellido}</strong> con <strong>DNI: ${usuarioEncontrado.dni}</strong></p>
+                          <p>Hemos recibido una solicitud para cambiar la contraseña de tu cuenta. Tienes <strong>5 minutos</strong> hasta que el codigo expire.</p>
+                          <p>Tu código de verificación es: <strong>${codigoVerificacion}</strong></p>
+                          <p>Este código expirará el: <strong>${expiracionFormat}</strong></p>
+                          <p>Si no solicitaste este cambio, por favor ignora este correo.</p>
+                        </div>
+                        <div class="footer">
+                          <p>© 2023 RG SERVICIOS GENERALES. Todos los derechos reservados.</p>
+                        </div>
+                        </div>
+                        </body>
+                        </html>
+`
+
+    await this.mailService.sendMail(UpdatePasswordUsuarioDto.email, 'Cambio de contraseña', emailContent);
+
+    return { message: 'Codigo de verificacion enviado al correo' };
+  }
+
+  //creamos el servicio para actualizar la contraseña
+  async updatePasswordCode(dni: string, UpdatePasswordCodeUsuarioDto: UpdatePasswordCodeUsuarioDto) {
+    const usuarioEncontrado = await this.usuarioRepository.findOneBy({
+      dni: dni,
+      resetCode: UpdatePasswordCodeUsuarioDto.resetCode,
+      estado: true
+    });
+
+    if (!usuarioEncontrado) {
+      return { message: 'Usuario no encontrado' };
+    }
+
+    if (!usuarioEncontrado.estado) {
+      return { message: 'Usuario eliminado' };
+    }
+
+    //ahora verificamos si el codigo de verificacion ha expirado
+    if (new Date() > usuarioEncontrado.resetCodeExpiration) {
+      return { message: 'Codigo de verificacion expirado' };
+    }
+
+    //ahora pasamos a actualizar la contraseña del usuario
+    await this.usuarioRepository.update(usuarioEncontrado.id, {
+      password: await bcryptjs.hash(UpdatePasswordCodeUsuarioDto.password, 10),
+      resetCode: null,
+      resetCodeExpiration: null
+    });
+
+    return { message: 'Contraseña actualizada correctamente' };
   }
 
   async remove(id: number) {
@@ -124,5 +269,15 @@ export class UsuariosService {
     await this.usuarioRepository.update(id, { estado: false });
 
     return { message: 'Usuario eliminado correctamente' };
+  }
+
+  buscarParaLogin(usuario: string) {
+    return this.usuarioRepository.findOne({
+      where: {
+        usuario: usuario,
+        estado: true
+      },
+      select: ["id", "usuario", "password"]
+    });
   }
 }
