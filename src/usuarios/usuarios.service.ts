@@ -9,10 +9,17 @@ import { UpdatePasswordUsuarioDto } from './dto/updatepassword-usuario.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { MailService } from 'src/mail/mail.service';
 import { UpdatePasswordCodeUsuarioDto } from './dto/updatepasswordcode-usuarios.dto';
+import { DetallePerfilesService } from 'src/detalle_perfiles/detalle_perfiles.service';
+import { DetalleModuloPerfilService } from 'src/detalle_modulo_perfil/detalle_modulo_perfil.service';
+import { DetalleModulosTablasService } from 'src/detalle_modulos_tablas/detalle_modulos_tablas.service';
+import { ModulosService } from 'src/modulos/modulos.service';
+import { TablasService } from 'src/tablas/tablas.service';
 
 @Injectable()
 export class UsuariosService {
-  constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>, private readonly mailService: MailService) { }
+  constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>, private readonly mailService: MailService,
+    private readonly detallePerfiles: DetallePerfilesService, private readonly detalleModulosPerfiles: DetalleModuloPerfilService, private detalleModulosTablas: DetalleModulosTablasService, private readonly modulos: ModulosService, private readonly tablas: TablasService
+  ) { }
   async create(createUsuarioDto: CreateUsuarioDto) {
     const dniEncontrado = await this.usuarioRepository.findOneBy({
       dni: createUsuarioDto.dni
@@ -277,7 +284,57 @@ export class UsuariosService {
         usuario: usuario,
         estado: true
       },
-      select: ["id", "usuario", "password"]
+      select: ["id", "usuario", "nombre", "apellido", "email", "password"]
     });
+  }
+
+  async buscarpermisosporidusuario(id: number) {
+    console.log("ID DE MI USUARIO", id);
+    //buscamos los perfiles que le corresponde a cada usuario
+    const detallePerfiles = await this.detallePerfiles.buscarperfilesporidusuario(id);
+
+    //ahora haremos un foreach para recorrer el detallePerfiles y extraer el perfil
+    const perfilesEncontrados = [];
+
+    detallePerfiles.forEach(detallePerfiles => {
+      perfilesEncontrados.push(detallePerfiles.perfil);
+    });
+
+
+    //ahora verificamos que el perfiles no haya repetidos
+
+    const perfiles = perfilesEncontrados.filter((valor, indiceActual, arreglo) => arreglo.findIndex((perfil) => perfil.id === valor.id) === indiceActual);
+
+    //console.log(perfiles);
+
+
+    //console.log(detallePerfiles);
+
+
+    const detalleModulo = await this.detalleModulosPerfiles.buscarModulosPorPerfil(detallePerfiles);
+    //verificamos si el detalleModulo tiene datos
+
+    //console.log(detalleModulo);
+
+
+    const detalleModulotablas = await this.detalleModulosTablas.buscartablaspormodulo(detalleModulo);
+
+    //console.log(detalleModulotablas);
+
+    const modulos = await this.modulos.buscarModulos(detalleModulotablas);
+
+    //console.log(modulos);
+
+    const tablas = await this.tablas.buscarTablas(detalleModulotablas);
+
+    // console.log(tablas);
+
+    const payload = {
+      perfiles: perfiles,
+      modulos: modulos,
+      tablas: tablas
+    };
+
+    return payload;
   }
 }

@@ -21,9 +21,9 @@ export class CreateSesioneDto {
 
     @ApiProperty()
     @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
-    @IsNotEmpty({ message: 'El usuario no puede estar vacío' })
-    @IsString({ message: 'El usuario debe ser un texto' })
-    @MaxLength(100, { message: 'El usuario debe tener menos de 100 caracteres' })
-    @MinLength(1, { message: 'El usuario debe tener más de 1 caracteres' })
-    usuario: string;
+    @IsNotEmpty({ message: 'El id_usuario no puede estar vacío' })
+    @IsString({ message: 'El id_usuario debe ser un texto' })
+    @MaxLength(100, { message: 'El id_usuario debe tener menos de 100 caracteres' })
+    @MinLength(1, { message: 'El id_usuario debe tener más de 1 caracteres' })
+    id_usuario: string;
 }

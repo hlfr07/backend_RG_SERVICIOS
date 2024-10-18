@@ -9,11 +9,11 @@ import { Sesione } from './entities/sesione.entity';
 @Injectable()
 export class SesionesService {
   constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>,
-@InjectRepository(Sesione) private sesioneRepository: Repository<Sesione>) { }
+    @InjectRepository(Sesione) private sesioneRepository: Repository<Sesione>) { }
 
   async create(createSesioneDto: CreateSesioneDto) {
     const usuarioEncontrado = await this.usuarioRepository.findOneBy({
-      id: parseInt(createSesioneDto.usuario)
+      id: parseInt(createSesioneDto.id_usuario)
     });
 
     if (!usuarioEncontrado) {
@@ -23,7 +23,7 @@ export class SesionesService {
     const nuevaSesione = this.sesioneRepository.create({
       fecha: createSesioneDto.fecha,
       hora: createSesioneDto.hora,
-      id_usuario: usuarioEncontrado.id
+      usuario: usuarioEncontrado
     });
 
     await this.sesioneRepository.save(nuevaSesione);
@@ -70,7 +70,7 @@ export class SesionesService {
     }
 
     const usuarioEncontrado = await this.usuarioRepository.findOneBy({
-      id: parseInt(updateSesioneDto.usuario)
+      id: parseInt(updateSesioneDto.id_usuario)
     });
 
     if (!usuarioEncontrado) {
@@ -80,7 +80,7 @@ export class SesionesService {
     await this.sesioneRepository.update(id, {
       fecha: updateSesioneDto.fecha,
       hora: updateSesioneDto.hora,
-      id_usuario: usuarioEncontrado.id
+      usuario: usuarioEncontrado
     });
 
     return { message: 'Sesione actualizada correctamente' };

@@ -4,9 +4,9 @@ export class GetDetallePerfileDto {
     @ApiProperty()
     id: number;
     @ApiProperty()
-    id_perfil: any;
+    perfil: any;
     @ApiProperty()
-    id_usuario: any;
+    usuario: any;
     @ApiProperty()
     estado: boolean;
 }

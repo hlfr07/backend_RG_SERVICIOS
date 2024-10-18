@@ -9,11 +9,11 @@ export class DetallePerfile {
     
     @ManyToOne(() => Perfile, perfil => perfil.id, {eager: true})
     @JoinColumn({name: 'id_perfil'})
-    id_perfil: number;
+    perfil: Perfile;
     
     @ManyToOne(() => Usuario, usuario => usuario.id, {eager: true})
     @JoinColumn({name: 'id_usuario'})
-    id_usuario: number;
+    usuario: Usuario;
     
     @Column({default: true})
     estado: boolean;

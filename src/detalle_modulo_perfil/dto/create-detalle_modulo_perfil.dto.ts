@@ -5,17 +5,17 @@ import { IsNotEmpty, IsString, Max, MaxLength, Min, MinLength } from "class-vali
 export class CreateDetalleModuloPerfilDto {
     @ApiProperty()
     @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
-    @IsNotEmpty({ message: 'El módulo no puede estar vacío' })
-    @IsString({ message: 'El módulo debe ser un texto' })
-    @MaxLength(100, { message: 'El módulo debe tener menos de 100 caracteres' })
-    @MinLength(1, { message: 'El módulo debe tener más de 1 caracteres' })
-    modulo: string;
+    @IsNotEmpty({ message: 'El id_modulo no puede estar vacío' })
+    @IsString({ message: 'El id_modulo debe ser un texto' })
+    @MaxLength(100, { message: 'El id_modulo debe tener menos de 100 caracteres' })
+    @MinLength(1, { message: 'El id_modulo debe tener más de 1 caracteres' })
+    id_modulo: string;
 
     @ApiProperty()
     @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
-    @IsNotEmpty({ message: 'El perfil no puede estar vacío' })
-    @IsString({ message: 'El perfil debe ser un texto' })
-    @MaxLength(100, { message: 'El perfil debe tener menos de 100 caracteres' })
-    @MinLength(1, { message: 'El perfil debe tener más de 1 caracteres' })
-    perfil: string;
+    @IsNotEmpty({ message: 'El id_perfil no puede estar vacío' })
+    @IsString({ message: 'El id_perfil debe ser un texto' })
+    @MaxLength(100, { message: 'El id_perfil debe tener menos de 100 caracteres' })
+    @MinLength(1, { message: 'El id_perfil debe tener más de 1 caracteres' })
+    id_perfil: string;
 }

@@ -1,4 +1,5 @@
 import { Modulo } from "src/modulos/entities/modulo.entity";
+import { Permiso } from "src/permisos/entities/permiso.entity";
 import { Tabla } from "src/tablas/entities/tabla.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,11 +10,15 @@ export class DetalleModulosTabla {
 
     @ManyToOne(() => Modulo, modulo => modulo.id, {eager: true})
     @JoinColumn({name: 'id_modulo'})
-    id_modulo: number;
+    modulo: Modulo;
 
     @ManyToOne(() => Tabla, tabla => tabla.id, {eager: true})
     @JoinColumn({name: 'id_tabla'})
-    id_tabla: number;
+    tabla: Tabla;
+
+    @ManyToOne(() => Permiso, permiso => permiso.id, {eager: true})
+    @JoinColumn({name: 'id_permiso'})
+    permiso: Permiso;
 
     @Column({default: true})
     estado: boolean;

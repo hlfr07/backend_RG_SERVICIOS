@@ -12,7 +12,7 @@ export class Sesione {
     hora: string;
     @ManyToOne(() => Usuario, usuario => usuario.id, {eager: true})
     @JoinColumn({name: 'id_usuario'})
-    id_usuario: number;
+    usuario: Usuario;
     @Column({default: true})
     estado: boolean;
 }

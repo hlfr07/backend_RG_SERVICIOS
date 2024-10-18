@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TablasService {
-  
+
   constructor(@InjectRepository(Tabla) private tablaRepository: Repository<Tabla>) { }
 
   async create(createTablaDto: CreateTablaDto) {
@@ -99,5 +99,71 @@ export class TablasService {
     await this.tablaRepository.update(id, tablaEncontrada);
 
     return { message: 'Tabla eliminada correctamente' };
+  }
+
+  async buscarTablas(detalleModulotablas) {
+    const tablas = await this.tablaRepository.find({
+      where: { estado: true }
+    })
+
+    if (!tablas) {
+      throw new HttpException('No se encontraron tablas', HttpStatus.NOT_FOUND);
+    }
+
+    //ahora con ayuda de un foreach recorremos el detalleModulotablas y dentro de eso recorremos el tablas cuando dentro del detalleModulotablas encontramos el id tabla que coincida con el id detalleModulotablas que estamos recorriendo lo guardamos en un array
+    const tablasEncontradas = [];
+
+    detalleModulotablas.forEach(detalleModuloTabla => {
+      tablas.forEach(tabla => {
+        if (tabla.id === detalleModuloTabla.tabla.id) {
+          // Crear un objeto con la tabla y el permiso
+          const tablaConPermiso = {
+            tabla,
+            permiso: detalleModuloTabla.permiso
+          };
+
+          // Agregar el objeto al arreglo
+          tablasEncontradas.push(tablaConPermiso);
+        }
+      });
+    });
+
+    //antes de retornar verificamos que no se vayan 2 tablasEncontradas con el mismo id, usemos foreach para recorrer el array y verificar que no se repitan los id
+
+    const tablasFiltradas = [];
+
+    tablasEncontradas.forEach(tabla => {
+      let existe = false;
+
+      tablasFiltradas.forEach(tablaFiltrada => {
+        if (tablaFiltrada.tabla.id === tabla.tabla.id) {
+          existe = true;
+          //si existe actualizamos los permiso.get o permiso.post o permiso.delete o permiso.put que esten en true
+          if (tabla.permiso.get) {
+            tablaFiltrada.permiso.get = true;
+            console.log(tablaFiltrada.permiso.get);
+          }
+          if (tabla.permiso.post) {
+            tablaFiltrada.permiso.post = true;
+            console.log(tablaFiltrada.permiso.post);
+          }
+          if (tabla.permiso.delete) {
+            tablaFiltrada.permiso.delete = true;
+            console.log(tablaFiltrada.permiso.delete);
+          }
+          if (tabla.permiso.put) {
+            tablaFiltrada.permiso.put = true;
+            console.log(tablaFiltrada.permiso.put);
+          }
+        }
+      });
+
+      if (!existe) {
+        tablasFiltradas.push(tabla);
+      } 
+    });
+    //console.log(tablasFiltradas);
+
+    return tablasFiltradas;
   }
 }

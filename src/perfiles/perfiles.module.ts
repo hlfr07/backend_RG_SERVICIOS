@@ -3,9 +3,10 @@ import { PerfilesService } from './perfiles.service';
 import { PerfilesController } from './perfiles.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Perfile } from './entities/perfile.entity';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Perfile])],
+  imports: [TypeOrmModule.forFeature([Perfile]), UsuariosModule],
   controllers: [PerfilesController],
   providers: [PerfilesService],
   exports: [PerfilesService]

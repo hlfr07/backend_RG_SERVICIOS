@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class ModulosService {
 
-  constructor (@InjectRepository(Modulo) private moduloRepository: Repository<Modulo>) {}
+  constructor(@InjectRepository(Modulo) private moduloRepository: Repository<Modulo>) { }
 
   async create(createModuloDto: CreateModuloDto) {
     const moduloEncontrado = await this.moduloRepository.findOneBy({
@@ -95,5 +95,32 @@ export class ModulosService {
     await this.moduloRepository.update(id, { estado: false });
 
     return { message: 'Módulo eliminado correctamente' };
+  }
+
+  async buscarModulos(detalleModulotablas: any[]) {
+    //llamamos todos los moudlos exitentes
+    const modulos = await this.moduloRepository.find({ where: { estado: true } });
+
+    if (!modulos) {
+      throw new HttpException('No se encontraron módulos', HttpStatus.NOT_FOUND);
+    }
+
+    //ahora con ayuda de un foreach recorremos el detalleModulotablas y dentro de eso recorremos el modulos cuando dentro del detalleModulotablas encontramos el id modulo que coincida con el id detalleModulotablas que estamos recorriendo lo guardamos en un array
+
+    const modulosEncontrados = [];
+
+    detalleModulotablas.forEach(detalleModulotabla => {
+      modulos.forEach(modulo => {
+        if (modulo.id === detalleModulotabla.modulo.id) {
+          modulosEncontrados.push(modulo);
+        }
+      });
+    });
+
+    //antes de retornar verificamos que no se vayan 2 modulosEncontrados con el mismo id, usemos foreach para recorrer el array y verificar que no se repitan los id
+
+    const modulosFiltrados = modulosEncontrados.filter((valor, indiceActual, arreglo) => modulos.findIndex((modulo) => modulo.id === valor.id) === indiceActual);
+
+    return modulosFiltrados;
   }
 }

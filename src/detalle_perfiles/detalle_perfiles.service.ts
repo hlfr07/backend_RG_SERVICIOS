@@ -15,7 +15,7 @@ export class DetallePerfilesService {
 
   async create(createDetallePerfileDto: CreateDetallePerfileDto) {
     const perfileEncontrado = await this.perfileRepository.findOneBy({
-      id: parseInt(createDetallePerfileDto.perfil)
+      id: parseInt(createDetallePerfileDto.id_perfil)
     });
 
     if (!perfileEncontrado) {
@@ -23,7 +23,7 @@ export class DetallePerfilesService {
     }
 
     const usuarioEncontrado = await this.usuarioRepository.findOneBy({
-      id: parseInt(createDetallePerfileDto.usuario)
+      id: parseInt(createDetallePerfileDto.id_usuario)
     });
 
     if (!usuarioEncontrado) {
@@ -31,8 +31,8 @@ export class DetallePerfilesService {
     }
 
     const nuevoDetallePerfile = this.detalleperfileRepository.create({
-      id_perfil: perfileEncontrado.id,
-      id_usuario: usuarioEncontrado.id,
+      perfil: perfileEncontrado,
+      usuario: usuarioEncontrado,
     });
 
     await this.detalleperfileRepository.save(nuevoDetallePerfile);
@@ -66,6 +66,7 @@ export class DetallePerfilesService {
     return detallePerfileEncontrado;
   }
 
+
   async update(id: number, updateDetallePerfileDto: UpdateDetallePerfileDto) {
     const detallePerfileEncontrado = await this.detalleperfileRepository.findOneBy({
       id: id,
@@ -76,7 +77,7 @@ export class DetallePerfilesService {
     }
 
     const perfileEncontrado = await this.perfileRepository.findOneBy({
-      id: parseInt(updateDetallePerfileDto.perfil)
+      id: parseInt(updateDetallePerfileDto.id_perfil)
     });
 
     if (!perfileEncontrado) {
@@ -84,15 +85,15 @@ export class DetallePerfilesService {
     }
 
     const usuarioEncontrado = await this.usuarioRepository.findOneBy({
-      id: parseInt(updateDetallePerfileDto.usuario)
+      id: parseInt(updateDetallePerfileDto.id_usuario)
     });
 
     if (!usuarioEncontrado) {
       throw new HttpException('El usuario no existe', HttpStatus.CONFLICT);
     }
 
-    detallePerfileEncontrado.id_perfil = perfileEncontrado.id;
-    detallePerfileEncontrado.id_usuario = usuarioEncontrado.id;
+    detallePerfileEncontrado.perfil = perfileEncontrado;
+    detallePerfileEncontrado.usuario = usuarioEncontrado;
 
     await this.detalleperfileRepository.update(id, detallePerfileEncontrado);
 
@@ -116,5 +117,29 @@ export class DetallePerfilesService {
     await this.detalleperfileRepository.update(id, { estado: false });
 
     return { message: 'Detalle Perfile eliminado correctamente  ' };
+  }
+
+  //crear el metodo para devolver todos los perfiles segun el id del usuario
+  async buscarperfilesporidusuario(id: number) {
+    // Buscar todos los registros donde el estado sea true
+    const detallePerfiles = await this.detalleperfileRepository.find({
+      where: { estado: true } // Cargar relaciones si es necesario
+    });
+
+    if (!detallePerfiles) {
+      throw new HttpException('Detalle Perfile no encontrado', HttpStatus.NOT_FOUND);
+    }
+
+    //aca haremos un foreach para almacenar los detalle perfiles egun el id del usuario
+    const detalleperfilesuser = [];
+
+    detallePerfiles.forEach(detalle => {
+      if (detalle.usuario.id === id) {
+        detalleperfilesuser.push(detalle);
+      }
+    });
+
+    return detalleperfilesuser;
+
   }
 }

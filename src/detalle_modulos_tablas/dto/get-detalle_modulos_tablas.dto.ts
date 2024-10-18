@@ -4,9 +4,11 @@ export class GetDetalleModulosTablaDto {
     @ApiProperty()
     id: number;
     @ApiProperty()
-    id_modulo: any;
+    modulo: any;
     @ApiProperty()
-    id_tabla: any;
+    tabla: any;
+    @ApiProperty()
+    permiso: any;
     @ApiProperty()
     estado: boolean;
 }

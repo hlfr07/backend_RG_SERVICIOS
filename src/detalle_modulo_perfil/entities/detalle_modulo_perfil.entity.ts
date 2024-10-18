@@ -9,11 +9,11 @@ export class DetalleModuloPerfil {
 
     @ManyToOne(() => DetalleModulosTabla, detallemodulostabla => detallemodulostabla.id, {eager: true})
     @JoinColumn({name: 'id_detalle_modulo'})
-    id_detalle_modulo: number;
+    detalle_modulo: DetalleModulosTabla;
 
     @ManyToOne(() => DetallePerfile, detalleperfil => detalleperfil.id, {eager: true})
     @JoinColumn({name: 'id_detalle_perfil'})
-    id_detalle_perfil: number;
+    detalle_perfil: DetallePerfile;
 
     @Column({default: true})
     estado: boolean;
