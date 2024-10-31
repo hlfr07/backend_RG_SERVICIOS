@@ -15,6 +15,8 @@ export class PerfilesController {
 
   @ApiBody({ type: CreatePerfileDto })
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('perfiles', 'get')
   create(@Body() createPerfileDto: CreatePerfileDto) {
     return this.perfilesService.create(createPerfileDto);
   }
@@ -28,6 +30,8 @@ export class PerfilesController {
   }
 
   @ApiBody({ type: GetPerfileDto })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('perfiles', 'get')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.perfilesService.findOne(+id);
@@ -35,11 +39,15 @@ export class PerfilesController {
 
   @ApiBody({ type: CreatePerfileDto }) //se usa el create para el body
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('perfiles', 'get')
   update(@Param('id') id: string, @Body() updatePerfileDto: UpdatePerfileDto) {
     return this.perfilesService.update(+id, updatePerfileDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('perfiles', 'get')
   remove(@Param('id') id: string) {
     return this.perfilesService.remove(+id);
   }

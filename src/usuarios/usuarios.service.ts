@@ -10,15 +10,14 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { MailService } from 'src/mail/mail.service';
 import { UpdatePasswordCodeUsuarioDto } from './dto/updatepasswordcode-usuarios.dto';
 import { DetallePerfilesService } from 'src/detalle_perfiles/detalle_perfiles.service';
-import { DetalleModuloPerfilService } from 'src/detalle_modulo_perfil/detalle_modulo_perfil.service';
-import { DetalleModulosTablasService } from 'src/detalle_modulos_tablas/detalle_modulos_tablas.service';
 import { ModulosService } from 'src/modulos/modulos.service';
 import { TablasService } from 'src/tablas/tablas.service';
+import { PermisosService } from 'src/permisos/permisos.service';
 
 @Injectable()
 export class UsuariosService {
   constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>, private readonly mailService: MailService,
-    private readonly detallePerfiles: DetallePerfilesService, private readonly detalleModulosPerfiles: DetalleModuloPerfilService, private detalleModulosTablas: DetalleModulosTablasService, private readonly modulos: ModulosService, private readonly tablas: TablasService
+    private readonly detallePerfiles: DetallePerfilesService, private readonly Permisos: PermisosService
   ) { }
   async create(createUsuarioDto: CreateUsuarioDto) {
     const dniEncontrado = await this.usuarioRepository.findOneBy({
@@ -289,7 +288,14 @@ export class UsuariosService {
   }
 
   async buscarpermisosporidusuario(id: number) {
-    console.log("ID DE MI USUARIO", id);
+    //console.log("ID DE MI USUARIO", id);
+    const usuarioEncontrado = await this.usuarioRepository.findOneBy({
+      id: id
+    });
+
+    if (!usuarioEncontrado) {
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+    }
     //buscamos los perfiles que le corresponde a cada usuario
     const detallePerfiles = await this.detallePerfiles.buscarperfilesporidusuario(id);
 
@@ -301,39 +307,20 @@ export class UsuariosService {
     });
 
 
-    //ahora verificamos que el perfiles no haya repetidos
-
-    const perfiles = perfilesEncontrados.filter((valor, indiceActual, arreglo) => arreglo.findIndex((perfil) => perfil.id === valor.id) === indiceActual);
-
-    //console.log(perfiles);
-
-
     //console.log(detallePerfiles);
 
+    //recorremos con un foreach al detallePerfiles para extraer el permisos usando el servicio de permisos
+    const permisos = await this.Permisos.buscarPermisosperfil(detallePerfiles);
 
-    const detalleModulo = await this.detalleModulosPerfiles.buscarModulosPorPerfil(detallePerfiles);
-    //verificamos si el detalleModulo tiene datos
-
-    //console.log(detalleModulo);
-
-
-    const detalleModulotablas = await this.detalleModulosTablas.buscartablaspormodulo(detalleModulo);
-
-    //console.log(detalleModulotablas);
-
-    const modulos = await this.modulos.buscarModulos(detalleModulotablas);
-
-    //console.log(modulos);
-
-    const tablas = await this.tablas.buscarTablas(detalleModulotablas);
-
-    // console.log(tablas);
+    //console.log(permisos);
 
     const payload = {
-      perfiles: perfiles,
-      modulos: modulos,
-      tablas: tablas
+      perfiles: permisos.perfiles,
+      modulos: permisos.modulos,
+      tablas: permisos.tablas
     };
+
+    //console.log("PERMISOS DE MI USUARIO", payload);
 
     return payload;
   }

@@ -7,16 +7,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SesionesModule } from './sesiones/sesiones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { TablasModule } from './tablas/tablas.module';
-import { PermisosModule } from './permisos/permisos.module';
 import { ModulosModule } from './modulos/modulos.module';
 import { DetallePerfilesModule } from './detalle_perfiles/detalle_perfiles.module';
-import { DetalleModulosTablasModule } from './detalle_modulos_tablas/detalle_modulos_tablas.module';
-import { DetalleModuloPerfilModule } from './detalle_modulo_perfil/detalle_modulo_perfil.module';
 import { MailService } from './mail/mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
 import { RaresModule } from './rares/rares.module';
+import { PermisosModule } from './permisos/permisos.module';
 
 @Module({
   imports: [
@@ -40,16 +38,14 @@ import { RaresModule } from './rares/rares.module';
     SesionesModule,
     UsuariosModule,
     TablasModule,
-    PermisosModule,
     ModulosModule,
     DetallePerfilesModule,
-    DetalleModulosTablasModule,
-    DetalleModuloPerfilModule,
     MailModule,
     AuthModule,
     RaresModule,
+    PermisosModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
 })
-export class AppModule {}
+export class AppModule { }

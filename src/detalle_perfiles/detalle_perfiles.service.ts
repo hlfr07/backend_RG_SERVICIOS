@@ -30,6 +30,16 @@ export class DetallePerfilesService {
       throw new HttpException('El usuario no existe', HttpStatus.CONFLICT);
     }
 
+    //verificamos que el perfil no este asignado al usuario
+    const detallePerfileExistente = await this.detalleperfileRepository.findOneBy({
+      perfil: perfileEncontrado,
+      usuario: usuarioEncontrado
+    });
+
+    if (detallePerfileExistente) {
+      throw new HttpException('El detallePerfile ya existe', HttpStatus.CONFLICT);
+    }
+
     const nuevoDetallePerfile = this.detalleperfileRepository.create({
       perfil: perfileEncontrado,
       usuario: usuarioEncontrado,
@@ -90,6 +100,16 @@ export class DetallePerfilesService {
 
     if (!usuarioEncontrado) {
       throw new HttpException('El usuario no existe', HttpStatus.CONFLICT);
+    }
+
+    //verificamos que el la nueva actualizacion no este asignado al usuario
+    const detallePerfileExistente = await this.detalleperfileRepository.findOneBy({
+      perfil: perfileEncontrado,
+      usuario: usuarioEncontrado
+    });
+
+    if (detallePerfileExistente) {
+      throw new HttpException('El detallePerfile ya existe', HttpStatus.CONFLICT);
     }
 
     detallePerfileEncontrado.perfil = perfileEncontrado;

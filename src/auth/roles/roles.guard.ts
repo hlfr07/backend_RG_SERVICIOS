@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UsuariosService } from 'src/usuarios/usuarios.service';
+import { UsuariosService } from '../../usuarios/usuarios.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -23,36 +23,23 @@ export class RolesGuard implements CanActivate {
 
     //llamamos al serivicio de permisosidusuario
     const permisosdelservicio = await this.PermisosService.buscarpermisosporidusuario(user?.sub);
-    //console.log("PERMISOSOS DE MI SERVICIO USUARIOS",permisosdelservicio.tablas);
+    // console.log("PERMISOSOS DE MI SERVICIO USUARIOS",permisosdelservicio.tablas);
     const tablas = permisosdelservicio?.tablas;
-    //console.log(tablas);
+    // console.log(tablas);
 
     if (!tablas) {
       throw new ForbiddenException('No tienes permiso para acceder a esta ruta');
     }
 
-    //ahora recorremos con un foreach a tablas y extraemos la tabla y permiso
-    let permisos = [];
-    tablas.forEach((elementtabla) => {
-      //  console.log(elementtabla.tabla);
-      //   console.log(elementtabla.permiso);
-      const permiso = {
-        tabla: elementtabla.tabla,
-        permiso: elementtabla.permiso
-      }
-      permisos.push(permiso);
-    });
-    //console.log(permisos);
-
     // Desestructurar tabla y permiso requeridos desde el decorador @Roles
     const [requiredTable, requiredPermission] = requiredRoles;
-    console.log(requiredTable, requiredPermission);
+    //console.log(requiredTable, requiredPermission);
     // Verificar si el usuario tiene el permiso requerido, para eso recorremos con un foreach a permisos
     let tienePermiso = false;
-    permisos.forEach((elementpermiso) => {
-      console.log(elementpermiso.tabla.estado);
+    tablas.forEach((elementpermiso) => {
+      //console.log(elementpermiso.tabla.estado);
       if (elementpermiso.tabla.estado) {
-        console.log(elementpermiso.tabla.tabla, elementpermiso.permiso[requiredPermission]);
+        //console.log(elementpermiso.tabla.tabla, elementpermiso.permiso[requiredPermission]);
         if (elementpermiso.tabla.tabla === requiredTable && elementpermiso.permiso[requiredPermission] === true) {
           tienePermiso = true;
         }
