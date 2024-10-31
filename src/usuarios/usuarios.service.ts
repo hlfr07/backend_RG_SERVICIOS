@@ -315,6 +315,7 @@ export class UsuariosService {
     //console.log(permisos);
 
     const payload = {
+      usuario: usuarioEncontrado,
       perfiles: permisos.perfiles,
       modulos: permisos.modulos,
       tablas: permisos.tablas
