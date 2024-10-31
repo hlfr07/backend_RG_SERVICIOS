@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { PermisosService } from './permisos.service';
 import { CreatePermisoDto } from './dto/create-permiso.dto';
 import { UpdatePermisoDto } from './dto/update-permiso.dto';
-import { Roles } from 'src/auth/roles/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { Roles } from '../auth/roles/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles/roles.guard';
 
 @Controller('permisos')
 export class PermisosController {

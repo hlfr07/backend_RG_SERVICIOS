@@ -4,9 +4,9 @@ import { CreateTablaDto } from './dto/create-tabla.dto';
 import { UpdateTablaDto } from './dto/update-tabla.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { GetTablaDto } from './dto/get-tabla.dto';
-import { Roles } from 'src/auth/roles/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { Roles } from '../auth/roles/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles/roles.guard';
 
 @ApiTags('Tablas')
 @Controller('tablas')

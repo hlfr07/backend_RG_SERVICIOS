@@ -6,9 +6,9 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { GetUsuarioDto } from './dto/get-usuario.dto';
 import { UpdatePasswordUsuarioDto } from './dto/updatepassword-usuario.dto';
 import { UpdatePasswordCodeUsuarioDto } from './dto/updatepasswordcode-usuarios.dto';
-import { Roles } from 'src/auth/roles/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { Roles } from '../auth/roles/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles/roles.guard';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
