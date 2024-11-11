@@ -5,11 +5,15 @@ import { UpdatePermisoDto } from './dto/update-permiso.dto';
 import { Roles } from '../auth/roles/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles/roles.guard';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { GetPermisoDto } from './dto/get-permiso.dto';
 
+@ApiTags('Permisos')
 @Controller('permisos')
 export class PermisosController {
   constructor(private readonly permisosService: PermisosService) {}
 
+  @ApiBody({ type: CreatePermisoDto })
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('permisos', 'get')
@@ -17,6 +21,7 @@ export class PermisosController {
     return this.permisosService.create(createPermisoDto);
   }
 
+  @ApiBody({ type: [GetPermisoDto] })
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('permisos', 'get')
@@ -26,6 +31,7 @@ export class PermisosController {
     return this.permisosService.findAll();
   }
 
+  @ApiBody({ type: GetPermisoDto })
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('permisos', 'get')
@@ -33,6 +39,7 @@ export class PermisosController {
     return this.permisosService.findOne(+id);
   }
 
+  @ApiBody({ type: CreatePermisoDto })
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('permisos', 'get')

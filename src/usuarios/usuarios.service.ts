@@ -56,7 +56,7 @@ export class UsuariosService {
 
     await this.usuarioRepository.save(nuevoUsuario);
 
-    return { message: 'Usuario creado correctamente' };
+    return nuevoUsuario;
   }
 
   findAll() {

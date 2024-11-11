@@ -7,11 +7,14 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import { Response } from 'express';  // Asegúrate de importar Response desde express
 import { cwd } from 'process';
+import { ApiBody, ApiProperty, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Rares')
 @Controller('rares')
 export class RaresController {
   constructor(private readonly raresService: RaresService) { }
 
+  @ApiBody({ type: CreateRareDto })
   @Post()
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({

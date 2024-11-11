@@ -1,17 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import Module from "module";
-import { Perfile } from "src/perfiles/entities/perfile.entity";
-import { Tabla } from "src/tablas/entities/tabla.entity";
 
 export class GetPermisoDto {
     @ApiProperty()
     id: number;
     @ApiProperty()
-    modulo: Module;
+    modulo: any;
     @ApiProperty()
-    tabla: Tabla;
+    tabla: any;
     @ApiProperty()
-    perfil: Perfile;
+    perfil: any;
     @ApiProperty()
     get: boolean;
     @ApiProperty()
