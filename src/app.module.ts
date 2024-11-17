@@ -15,6 +15,15 @@ import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
 import { RaresModule } from './rares/rares.module';
 import { PermisosModule } from './permisos/permisos.module';
+import { ServiciosModule } from './servicios/servicios.module';
+import { ServicioCamposModule } from './servicio_campos/servicio_campos.module';
+import { DepartamentosModule } from './departamentos/departamentos.module';
+import { ProvinciasModule } from './provincias/provincias.module';
+import { DistritosModule } from './distritos/distritos.module';
+import { ClientesModule } from './clientes/clientes.module';
+import { ActividadesModule } from './actividades/actividades.module';
+import { ServicioValorCamposModule } from './servicio_valor_campos/servicio_valor_campos.module';
+import { EvidenciaActividadModule } from './evidencia_actividad/evidencia_actividad.module';
 
 @Module({
   imports: [
@@ -44,6 +53,15 @@ import { PermisosModule } from './permisos/permisos.module';
     AuthModule,
     RaresModule,
     PermisosModule,
+    ServiciosModule,
+    ServicioCamposModule,
+    DepartamentosModule,
+    ProvinciasModule,
+    DistritosModule,
+    ClientesModule,
+    ActividadesModule,
+    ServicioValorCamposModule,
+    EvidenciaActividadModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
