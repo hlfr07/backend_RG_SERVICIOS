@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { EvidenciaActividadService } from './evidencia_actividad.service';
 import { CreateEvidenciaActividadDto } from './dto/create-evidencia_actividad.dto';
 import { UpdateEvidenciaActividadDto } from './dto/update-evidencia_actividad.dto';
@@ -6,6 +6,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { GetEvidenciaActividadDto } from './dto/get-evidencia_actividad.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles/roles.guard';
+import { Roles } from '../auth/roles/roles.decorator';
 @ApiTags('EvidenciaActividad')
 @Controller('evidencia-actividad')
 export class EvidenciaActividadController {
@@ -17,6 +20,8 @@ export class EvidenciaActividadController {
     type: CreateEvidenciaActividadDto,
   })
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('evidencia-actividad', 'post')
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: './uploads',  // Carpeta donde se guardarán los archivos
@@ -45,12 +50,16 @@ export class EvidenciaActividadController {
 
   @ApiBody({ type: [GetEvidenciaActividadDto] })
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('evidencia-actividad', 'get')
   findAll() {
     return this.evidenciaActividadService.findAll();
   }
 
   @ApiBody({ type: GetEvidenciaActividadDto })
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('evidencia-actividad', 'get')
   findOne(@Param('id') id: string) {
     return this.evidenciaActividadService.findOne(+id);
   }
@@ -61,6 +70,8 @@ export class EvidenciaActividadController {
     type: CreateEvidenciaActividadDto,
   })
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('evidencia-actividad', 'put')
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: './uploads',  // Carpeta donde se guardarán los archivos
@@ -88,6 +99,8 @@ export class EvidenciaActividadController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('evidencia-actividad', 'delete')
   remove(@Param('id') id: string) {
     return this.evidenciaActividadService.remove(+id);
   }
