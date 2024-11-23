@@ -50,22 +50,16 @@ export class AuthService {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
         email: usuario.email
-      },
-      perfiles: permisos.perfiles,
-      modulos: permisos.modulos,
-      tablas: permisos.tablas
+      }
     };
     console.log("PERMISOS DE MI USUARIO", payload);
-    console.log(payload.tablas);
 
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: process.env.ACCESS_TOKEN,
-      expiresIn: 60 * 60, // 1 hora
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: process.env.REFRESH_TOKEN,
-      expiresIn: 60 * 60 * 24 * 30, // 30 días
     });
 
     return {

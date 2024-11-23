@@ -102,18 +102,26 @@ export class DetallePerfilesService {
       throw new HttpException('El usuario no existe', HttpStatus.CONFLICT);
     }
 
-    //verificamos que el la nueva actualizacion no este asignado al usuario
-    const detallePerfileExistente = await this.detalleperfileRepository.findOneBy({
-      perfil: perfileEncontrado,
-      usuario: usuarioEncontrado
-    });
+    //verificamos que el campo estado sea true o false
+    if (updateDetallePerfileDto.estado !== 'true' && updateDetallePerfileDto.estado !== 'false') {
+      throw new HttpException('El estado debe ser true o false', HttpStatus.CONFLICT);
+    }
 
-    if (detallePerfileExistente) {
-      throw new HttpException('El detallePerfile ya existe', HttpStatus.CONFLICT);
+    //comprobamos la existencia del detalle perfile con el mismo perfil y usuario solo si el perfil o usuario es diferente
+    if (parseInt(updateDetallePerfileDto.id_perfil) !== detallePerfileEncontrado.perfil.id || parseInt(updateDetallePerfileDto.id_usuario) !== detallePerfileEncontrado.usuario.id) {
+      const detallePerfileExistente = await this.detalleperfileRepository.findOneBy({
+        perfil: perfileEncontrado,
+        usuario: usuarioEncontrado
+      });
+
+      if (detallePerfileExistente) {
+        throw new HttpException('El detallePerfile ya existe', HttpStatus.CONFLICT);
+      }
     }
 
     detallePerfileEncontrado.perfil = perfileEncontrado;
     detallePerfileEncontrado.usuario = usuarioEncontrado;
+    detallePerfileEncontrado.estado = updateDetallePerfileDto.estado === 'true' ? true : false;
 
     await this.detalleperfileRepository.update(id, detallePerfileEncontrado);
 

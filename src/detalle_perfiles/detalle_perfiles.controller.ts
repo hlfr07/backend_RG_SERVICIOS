@@ -15,7 +15,7 @@ export class DetallePerfilesController {
   @ApiBody({ type: CreateDetallePerfileDto })
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('detalle_perfiles', 'get')
+  @Roles('detalle_perfiles', 'post')
   create(@Body() createDetallePerfileDto: CreateDetallePerfileDto) {
     return this.detallePerfilesService.create(createDetallePerfileDto);
   }
@@ -39,14 +39,14 @@ export class DetallePerfilesController {
   @ApiBody({ type: CreateDetallePerfileDto })
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('detalle_perfiles', 'get')
+  @Roles('detalle_perfiles', 'put')
   update(@Param('id') id: string, @Body() updateDetallePerfileDto: UpdateDetallePerfileDto) {
     return this.detallePerfilesService.update(+id, updateDetallePerfileDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('detalle_perfiles', 'get')
+  @Roles('detalle_perfiles', 'delete')
   remove(@Param('id') id: string) {
     return this.detallePerfilesService.remove(+id);
   }
