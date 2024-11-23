@@ -36,7 +36,7 @@ export class DetallePerfilesController {
     return this.detallePerfilesService.findOne(+id);
   }
 
-  @ApiBody({ type: CreateDetallePerfileDto })
+  @ApiBody({ type: UpdateDetallePerfileDto })
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('detalle_perfiles', 'put')
